@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>03_原型链及属性问题</title>
+</head>
+<body>
+    <!-- 
+    1. 原型链(图解)
+        * 访问一个对象属性时，
+            * 现在自身属性中查找，找到返回
+            * 如果没有，再沿着 __proto__ 这条线向上查找，找到返回
+            * 如果最终没有找到，返回 underfined
+        * 别名：隐式原型链
+        * 作用：查找对象的属性(方法)
+     -->
+    <script type="text/javascript">
+        function Fn() {
+            this.test1 = function(){
+                console.log('test1()测试成功！')
+            }
+        }
+        Fn.prototype.test2 = function(){
+            console.log('test2()测试成功！')
+        }
+        var fn = new Fn()
+        fn.test1()
+        fn.test2()
+        console.log(fn.toString())
+        console.log(fn.test2);
+        fn.test2()
+        console.log('------------------------------')
+
+        
+        //    1. 函数的显示原型函数指向的对象默认是空 Object 实例对象(但 Object 不满足)
+        
+        console.log(fn.__proto__ === Fn.prototype)  // true
+        console.log(Object.prototype instanceof Object) // false
+        console.log(Function.prototype instanceof Object) //true
+        
+        //    2.所有的函数都是 Function 的实例(包括 Function 本身)
+        
+        console.log(Function.__proto__ ===  Function.prototype)
+
+        //    3. Object 的原型对象是原型链尽头
+        console.log(Object.prototype.__proto__)  // null
+        console.log('------------------------------')
+    </script>
+
+
+
+
+
+<!-- 
+    1. 读取对象的属性值时：会自动到原型链中查找
+    2. 设置对象的属性值时；不会查找原型链，如果当前对象中没有此属性，直接添加此属性并设置其值
+    3. 方法一般定义在原型中，属性一般通过构造函数定义在对象本身上
+ -->
+ <script type="text/javascript">
+    function fun(){
+
+    }
+    fun.prototype.a = 'xxx'
+    var fun1 = new fun()
+    console.log(fun1.a , fun1)
+
+    var fun2 = new fun()
+    fun2.a = 'yyy'
+    console.log(fun1.a , fun2.a , fun2)
+
+    function Person(name, age){
+        this.name = name
+        this.age = age 
+    }
+
+    Person.prototype.setName = function(name){
+        this.name = name
+    }
+    
+    var p1 = new Person('Tom123',12)
+    p1.setName('Bob')
+    console.log(p1)
+ </script>
+    
+</body>
+</html>
